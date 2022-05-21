@@ -1,16 +1,13 @@
 #include "main.h"
-
 /**
  * _position - return position on string
  * @s: string
  * @n: int
  * Return: postion on string
  */
-
 int _position(const char *s, int n)
 {
 	int i;
-
 	i = 0;
 
 	while (*s)
