@@ -1,37 +1,33 @@
 #ifndef MAIN_H
 #define MAIN_H
+#include <stdarg.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <stdio.h>
 
-#include <stdarg.h> /* va_list */
-#include <stdlib.h> /* malloc, free */
-#include <unistd.h> /* write */
-
-/* helper functions */
-char *(*get_func(char i))(va_list);
-char *create_buffer(void);
-void write_buffer(char *buffer, int len, va_list list);
-char *_strcpy(char *dest, char *src);
-int _strlen(char *s);
-
-/* printf functions */
 int _printf(const char *format, ...);
-char *print_s(va_list list);
-char *print_c(va_list list);
-char *print_d(va_list list);
-char *itob(va_list list);
-char *rot13(va_list list);
-char *rev_string(va_list list);
-char *itoOctal(va_list list);
+int _position(const char *s, int n);
+int _strlen(char *s);
+char *_strcat(char *dest, char *src, int n);
+int _abs(int n);
+int _numlen(int n);
+void *rev_string(char *s);
 
 /**
- * struct types - struct
- * @id: identifier of type to print (e.g. c means char)
- * @func: ptr to functions that print according to identifier (e.g. print_c)
+ * struct type - Struct data type
+ *
+ * @op: data type argument
+ * @f: The function associated
  */
 
-typedef struct types
+typedef struct type
 {
-	char id;
-	char *(*func)(va_list);
-} print;
+	char *op;
+	char *(*f)(va_list);
+} type_t;
 
-#endif
+char *print_c(va_list list);
+char *print_s(va_list list);
+char *print_i(va_list list);
+char *print_bin(va_list list);
+#endif /* #ifndef _HOLBERTON_H */
