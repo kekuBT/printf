@@ -1,77 +1,30 @@
-.TH _PRINTF 3 "22 May 2022"
-              "_printf"
-                  .SH NAME
-                      _printf -
-    formatted output conversion
-        .SH SYNOPSIS
-        .BI
-        printf(FORMAT, ...)
-        .PP
-        .B #include "holberton.h"
-        .PP
-        .B #include<unistd.h>
-        .PP
-        .B #include<stdlib.h>
-        .PP
-        .B #include<stdarg.h>
-        .PP
-        .B #include<stdio.h>
-        .PP
-        .B int _printf(const char *format, ...);
-.SH DESCRIPTION
-_printf is a function that prints formatted output
-.PP
-.B Return value
-.PP
-Upon successful return, _printf returns the number of characters printed(excluding the null byte used to end output to strings).
-.PP
-If an output error is encountered, a negative value is returned.
-.PP
-.B Conversion specifier
-.PP
- A character that specifies the type of conversion to be applied. The conversion specifiers and their meanings are:
-.PP
-.B c
-.PP
- Takes an int arguments that is in ascii decimals and converts it to a strign of 2 bytes with the character and null terminator.
-.PP
-.B s
-.PP
- Takes a character pointer and copies it into a new pointer.
-.PP
-.B d,i
-.PP
- Takes an int argument and converts it to signed decimal notation.
-.PP
-.B b
-.PP
-Takes an unsigned int and converts it to binary.
-.PP
-.B o, u, x, X
-.PP
- Takes an unsigned int argument and converts it to unsigned octal (\fBo\fR), unsigned decimal (\fBu\fR), or unsigned hexadecimal(\fBx\fR and \fBX\fR) notation. \fBabcdef\fR are used for \fBx\fR conversions anad \fBABCDEF\fR are used for \fBX\fR conversions.
-.PP
-.B S
-.PP
-Takes a character pointer and when there is a non character value witch are below 32 and above 126 in ASCII table it will convert it to hexadecimals.
-.PP
-.B p
-.PP
-Takes a character pointer and type cast it to an long unsigned int and converts it to hexadecimals.
-.PP
-.SH Examples
-.B Input
-.PP
-_printf(\"I have %d dollars\\n\", 20);
-.PP
-_printf(\"%s and %s deserve %d%% on this project.\\n\", \"Spencer\", \"Kevin\", 100);
-.PP
-.B Output
-.PP
-I have 20 dollars
-.PP
-Spencer and Kevin deserve 100% on this project.
-.SH See Also
-.B Twitter
-.PP
-@kekubt
+.Dd 22/5/2022
+.Dt _printf
+.Os Darwin
+.Sh _printf
+.Nm Print ARGUMENT(S) according to FORMAT
+.Nd format and print data
+.Sh SYNOPSIS
+.Nm _printf
+.Op Fl FORMAT
+.Op Fl ARGUMENT
+.Sh DESCRIPTION
+This _printf function is the recreation of the printf function, that is used to write the C string pointed by format to the standard output (stdout), it includes format specifiers (subsequences beginning with %).
+.Pp
+A list of flags and their descriptions:
+.Bl -tag -width -indent
+.It Fl c
+This flag prints a char to the stdout.
+.It Fl s
+This flag prints a string to the stdout.
+.It Fl i
+This flag prints a int to the stdout.
+.It Fl d
+This flag print a decimal to the stdout, see -i
+It. Fl %
+This flag prints a single '%' symbol.
+.El
+.Pp
+.Sh Authors
+.Bl -tag -width "/Users/joeuser/Library/really_long_file_name" -compact
+Keku Belina
