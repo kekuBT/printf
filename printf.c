@@ -1,72 +1,133 @@
 #include "main.h"
 
 /**
- * _printf - custom function that format and print data
- * @format:  list of types of arguments passed to the function
- * Return: int
+ * locate_form - locate space and count
+ * @s: all string passed to it
+ * @index: current location of index
+ * Return: the nuber of spaces
  */
-
-int _printf(const char *format, ...)
+int locate_form(const char *s, int index)
 {
-	va_list list;
-	int idx, j;
-	int len_buf = 0;
-	char *s;
-	char *create_buff;
+	int x;
+	char *space;
 
-	type_t ops[] = {
-		{"c", print_c},
-		{"s", print_s},
-		{"i", print_i},
-		{"d", print_i},
-		{"b", print_bin},
-		{NULL, NULL}};
-	create_buff = malloc(1024 * sizeof(char));
-	if (create_buff == NULL)
+	space = " ";
+	for (x = 1; s[index + x] == space[0]; x++)
+		;
+	return (x - 1);
+}
+
+/**
+ * print_string - it will print the sting using write
+ * @format: all string passed to it
+ * @arg: the list of arguments
+ * @buffer: the buffer of the write
+ * Return: the nuber of buffer size
+ */
+int print_string(const char *format, va_list arg, char *buffer)
+{
+	int buf_c = 0, form_c = 0, s_c = 0, t_c = 0;
+	char *str, *id;
+	id_func f;
+
+	while (format[form_c] != '\0')
 	{
-		free(create_buff);
-		return (-1);
-	}
-	va_start(list, format);
-	if (format == NULL || list == NULL)
-		return (-1);
-	for (idx = 0; format[idx] != '\0'; idx++)
-	{
-		if (format[idx] == '%' && format[idx + 1] == '%')
-			continue;
-		else if (format[idx] == '%')
+		if (format[form_c] == '%')
 		{
-			if (format[idx + 1] == ' ')
-				idx += _position(format, idx);
-			for (j = 0; ops[j].f != NULL; j++)
+			id = find_id(format, form_c);
+			if (id[1] == '\0' && form_c == 0)
 			{
-				if (format[idx + 1] == *(ops[j].op))
+				free(buffer);
+				free(id);
+				return (-1);
+			}
+			f = get_id_func(id);
+			if (f == NULL)
+				str = id;
+			else
+			{
+				free(id);
+				str = f(arg);
+				if (str == NULL)
 				{
-					s = ops[j].f(list);
-					if (s == NULL)
-						return (-1);
-					_strlen(s);
-					_strcat(create_buff, s, len_buf);
-					len_buf += _strlen(s);
-					idx++;
-					break;
+					free(buffer);
+					free(str);
+					return (-1);
 				}
 			}
-			if (ops[j].f == NULL)
+			for (s_c = 0; str[s_c] != '\0'; s_c++)
 			{
-				create_buff[len_buf] = format[idx];
-				len_buf++;
+				buffer[buf_c] = str[s_c];
+				buf_c++;
+				t_c++;
+				if (buf_c == 1024)
+				{
+					buffer[buf_c] = '\0';
+					write(1, buffer, buf_c);
+					buf_c = 0;
+				}
 			}
+			if (str[0] == '\0' && format[form_c + 1] == 'c')
+			{
+				buffer[buf_c] = '\0';
+				buf_c++;
+				t_c++;
+				if (buf_c == 1024)
+				{
+					buffer[buf_c] = '\0';
+					write(1, buffer, buf_c);
+					buf_c = 0;
+				}
+			}
+			form_c += (2 + locate_form(format, form_c));
+			free(str);
 		}
 		else
 		{
-			create_buff[len_buf] = format[idx];
-			len_buf++;
+			buffer[buf_c] = format[form_c];
+			buf_c++;
+			t_c++;
+			form_c++;
+			if (buf_c == 1024)
+			{
+				buffer[buf_c] = '\0';
+				write(1, buffer, buf_c);
+				buf_c = 0;
+			}
 		}
 	}
-	create_buff[len_buf] = '\0';
-	write(1, create_buff, len_buf);
-	va_end(list);
-	free(create_buff);
-	return (len_buf);
+	buffer[buf_c] = '\0';
+	write(1, buffer, buf_c);
+	free(buffer);
+	return (t_c);
+}
+
+/**
+ * _printf - prints all the characters and arguments passed to it
+ * @format: all the arguments passed depending on identifiers
+ * Return: Number of characters printed
+ */
+int _printf(const char *format, ...)
+{
+	va_list arg;
+	int count = 0;
+	char *buffer;
+
+	if (format == NULL)
+		return (-1);
+	va_start(arg, format);
+	if (arg == NULL)
+	{
+		va_end(arg);
+		return (-1);
+	}
+	buffer = create_buffer();
+	if (buffer == NULL)
+	{
+		va_end(arg);
+		return (-1);
+	}
+	count = print_string(format, arg, buffer);
+	va_end(arg);
+	return (count);
 }
